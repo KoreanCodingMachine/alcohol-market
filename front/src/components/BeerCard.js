@@ -2,32 +2,32 @@ import React from 'react'
 import styled from 'styled-components'
 import src from '../asset/beer.jpeg'
 
-const BeerCard = () => {
+const BeerCard = ({title,image,rating,country,alcohol,type}) => {
   return (
     <STBeerCard>
         <div>
-            <img src={src} width={260} height={312}>
+            <img src={image} width={260} height={312}>
             </img>
         </div>
         <div className='beercard_content'>
-            <p>별</p>
-            <p>평점</p>
-            <p>(댓글 수)</p>
+            <p className='rate'>평점</p>
+            <p>{rating}</p>
+            <p>{country}</p>
         </div>
         <h1 className='beercard_name'>
-            맥주 이름
+            {title}
         </h1>
         <div className='beercard_info'>
-            주종 / 용량
+            {type} / {alcohol}
         </div>
-        <div className='beercard_smell-wrapper'>
+        {/* <div className='beercard_smell-wrapper'>
             <div className='beercard_smell'>
                 사과향
             </div>
             <div className='beercard_smell'>
                 사과향
             </div>
-        </div>
+        </div> */}
     </STBeerCard>
   )
 }
@@ -46,6 +46,10 @@ const STBeerCard = styled.div`
         gap: 10px;
         margin-top: 5px;
         margin-left: 5px;
+
+        .rate {
+            white-space: nowrap;
+        }
     }
 
     .beercard_name {

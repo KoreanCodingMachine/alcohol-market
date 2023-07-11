@@ -27,7 +27,6 @@ const STFooter = styled.div`
     background: #d9d9d9;
     width: 100%;
     height: 484px;
-
     .information {
         display: flex;
         justify-content: center;

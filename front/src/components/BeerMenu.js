@@ -1,11 +1,51 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { Filter } from './Filter'
 import SearchBar from './SearchBar'
 import BeerCard from './BeerCard'
 import Pagination from './Pagination'
+import axios from 'axios'
+
 
 const BeerMenu = () => {
+
+    const [isLoading, setIsLoading] = useState(false)
+    const [page, setPage] = useState(1)
+    const [data, setData] = useState([])
+    const [hasMore, setHasMore] = useState(true)
+   
+    const getData = async () => {
+        setIsLoading(prev => !prev)
+        const a = await axios.get(`http://192.168.10.19:3000/api/beer/main?page=${page}`)
+        // console.log(a.data.hasMore)
+        setHasMore(prev => a.data.hasMore)
+        setIsLoading(prev => !prev)
+        setData(prevData =>[...prevData, ...a.data.items])
+       
+    }
+    
+    const handleScroll = () => {
+        const { scrollTop, clientHeight, scrollHeight } = document.documentElement
+
+        if (scrollTop + clientHeight >= scrollHeight && !isLoading ) {
+            setPage(prevPage => prevPage + 1)
+        }
+    }
+
+    useEffect(() => {
+        if (!isLoading && hasMore) {
+            getData()
+        }
+        console.log('loading', isLoading)
+        console.log('page', page)
+    }, [page])
+
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isLoading]);
+
   return (
     <STBeerMenuContainer>
         <h1>BeerMenu</h1>
@@ -25,18 +65,22 @@ const BeerMenu = () => {
             </div>
         </div>
         <div className='beer_card-container'>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
-            <BeerCard/>
+           {
+            data.length > 0 && data.map((v,i) => {
+                    return <BeerCard 
+                        key={v._id}
+                        id={v.beerId}
+                        title={v.title} 
+                        image={v.image} 
+                        rating={v.rating} 
+                        country={v.country} 
+                        alcohol={v.alcohol} 
+                        type={v.type}
+                        />
+                })
+            }
+           
+            {isLoading && <p>Loading...</p>}
         </div>
         <div>
             <Pagination/>
@@ -47,7 +91,7 @@ const BeerMenu = () => {
 
 const STBeerMenuContainer = styled.div`
     width: 100%;
-    height: 2512px;
+    height: auto;
     margin-top: 2rem;
     display:flex;
     padding-top: 5rem;
@@ -56,13 +100,11 @@ const STBeerMenuContainer = styled.div`
 
     .beer_card-container {
         width: 832px;
-        height: 1946px;
+        /* height: 1946px; */
         margin-top: 5rem;
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
-        justify-content: center;
-        align-items: center;
     }
 
     .beer_menu {
