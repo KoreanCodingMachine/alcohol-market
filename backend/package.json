@@ -1,0 +1,44 @@
+{
+  "name": "f",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_OPTIONS=--experimental-modules node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.22.8",
+    "@babel/preset-env": "^7.22.7",
+    "@babel/register": "^7.22.5",
+    "@types/node": "^20.4.1"
+  },
+  "compilerOptions": {
+    "module": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*",
+        "*.js",
+        "*.mjs"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.1",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^12.0.0",
+    "mongodb": "^5.7.0"
+  }
+}
