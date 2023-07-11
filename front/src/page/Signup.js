@@ -33,7 +33,7 @@ function Signup() {
     const onSubmit = async () => {
       const { email, password } = inputs
 
-      const { data, status } = await axios.post('http://192.168.10.12:3000/signup', { username:email, password })
+      const { data, status } = await axios.post('http://localhost:3333/api/signup', { username:email, password })
 
       console.log(status)
 

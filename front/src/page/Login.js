@@ -34,7 +34,7 @@ function Login() {
 
         const { email, password } = inputs
 
-        const { data, status } = await axios.post('http://192.168.10.12:3000/login', {username:email, password})
+        const { data, status } = await axios.post('http://localhost:3333/api/signin', {username:email, password})
 
         console.log(status)
 

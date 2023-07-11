@@ -16,7 +16,7 @@ const BeerMenu = () => {
    
     const getData = async () => {
         setIsLoading(prev => !prev)
-        const a = await axios.get(`http://192.168.10.19:3000/api/beer/main?page=${page}`)
+        const a = await axios.get(`http://localhost:3333/api/beer/main?page=${page}`)
         // console.log(a.data.hasMore)
         setHasMore(prev => a.data.hasMore)
         setIsLoading(prev => !prev)
