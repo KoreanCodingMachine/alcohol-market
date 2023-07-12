@@ -12,10 +12,10 @@ const BeerCard = ({title,image,rating,country,alcohol,type}) => {
         <div className='beercard_content'>
             <p className='rate'>평점</p>
             <p>{rating}</p>
-            <p>{country}</p>
+            <p>{country.slice(0,8)}</p>
         </div>
         <h1 className='beercard_name'>
-            {title}
+            {title.slice(0,8)}
         </h1>
         <div className='beercard_info'>
             {type} / {alcohol}

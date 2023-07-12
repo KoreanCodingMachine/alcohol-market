@@ -1,14 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Filter = ({content, big}) => {
+export const Filter = ({content, big, onClick}) => {
+
+
   return (
     
        big 
        ? 
-        <STFilter>{content}</STFilter> 
+        <STFilter onClick={() => {onClick(content)}}>{content}</STFilter> 
        : 
-        <STFilterSmall>{content}</STFilterSmall>
+        <STFilterSmall onClick={() => {onClick(content)}}>{content}</STFilterSmall>
     
   )
 }

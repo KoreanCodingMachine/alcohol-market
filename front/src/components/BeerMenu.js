@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { Filter } from './Filter'
 import SearchBar from './SearchBar'
 import BeerCard from './BeerCard'
-import Pagination from './Pagination'
 import axios from 'axios'
 
 
@@ -13,33 +12,146 @@ const BeerMenu = () => {
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
     const [hasMore, setHasMore] = useState(true)
-   
+    const [next, setNext] = useState([])
+    const [filtered, setFiltered] = useState(false)
+    const [filteredName, setFilteredName] = useState(null)
+
     const getData = async () => {
         setIsLoading(prev => !prev)
         const a = await axios.get(`http://localhost:3333/api/beer/main?page=${page}`)
-        // console.log(a.data.hasMore)
-        setHasMore(prev => a.data.hasMore)
+        setHasMore(prev => {
+            if (!a.data.hasMore) {
+                return !prev
+            } else {
+                return prev
+            }
+         })
         setIsLoading(prev => !prev)
+
+        setNext(prevData=> [...next])
         setData(prevData =>[...prevData, ...a.data.items])
-       
+
     }
     
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = document.documentElement
 
-        if (scrollTop + clientHeight >= scrollHeight && !isLoading ) {
+        if (scrollTop + clientHeight >= scrollHeight && !isLoading && hasMore) {
             setPage(prevPage => prevPage + 1)
         }
+    }
+
+    const onFilterClick = (content) => {
+        
+        setFiltered(prev => {
+            return true
+        })
+
+        if (content === '도수순' || filteredName === '도수순') {
+            setFilteredName(prevName => '도수순')
+            let filtered = [...data]
+            console.log('-----------------filtered', filtered)
+            filtered.sort((a,b) => {
+                if (a.alcohol > b.alcohol) {
+                    return 1
+                } 
+
+                if (a.alcohol < b.alcohol) {
+                    return -1
+                }
+
+                return 0
+            })   
+        
+            setData(prev => {
+                if (prev.length) {
+                    return filtered
+                }
+            })
+        }
+
+        if (content === '평점순' || filteredName === '평점순') {
+            setFilteredName(prev => '평점순')
+            let filtered = [...data]
+            filtered.sort((a,b) => {
+                if (a.rating > b.rating) {
+                    return 1
+                }
+
+                if (a.rating < b.rating) {
+                    return -1
+                }
+
+                return 0
+            })
+
+            setData(prev => {
+                    return [...filtered]
+            })
+            console.log('filtered', filtered)
+            console.log('data', data)
+        }
+
+        if (content === '국가순') {
+            console.log('국가순')
+        }
+
     }
 
     useEffect(() => {
         if (!isLoading && hasMore) {
             getData()
         }
-        console.log('loading', isLoading)
-        console.log('page', page)
-    }, [page])
+        
+    }, [page, hasMore])
 
+
+    useEffect(() => {
+        if (filteredName === '도수순') {
+            let newData = [...data, ...next]
+                newData = data.sort((a,b) => {
+                if (a.alcohol > b.alcohol) {
+                    return 1
+                } 
+
+                if (a.alcohol < b.alcohol) {
+                    return -1
+                }
+
+                return 0
+            })   
+        
+            setData(prev => {
+                if (prev.length) {
+                    return [...newData]
+                }
+            })
+        }
+
+        if (filteredName === '평점순') {
+            let newData = [...data, ...next]
+                newData = data.sort((a,b) => {
+                if (a.rating > b.rating) {
+                    return 1
+                } 
+
+                if (a.rating < b.rating) {
+                    return -1
+                }
+
+                return 0
+            })   
+        
+            setData(prev => {
+                if (prev.length) {
+                    return [...newData]
+                }
+            })
+        }
+
+
+
+    },[filtered, filteredName, next])
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -56,9 +168,24 @@ const BeerMenu = () => {
         </div>
         <div className='filter_search'>
             <div className='filter'>
-                <Filter content={'리뷰 많은 순'} big={true}/>
-                <Filter content={'인기순'} big={false}/>
-                <Filter content={'최신순'} big={false}/>
+                <Filter  
+                    content={'도수순'} 
+                    big={true}  
+                    data={data}
+                    onClick={(content) => onFilterClick(content)}
+                    />
+                <Filter  
+                    content={'평점순'} 
+                    big={false} 
+                    data={data}
+                    onClick={(content) => onFilterClick(content)}
+                    />
+                <Filter  
+                    content={'국가순'} 
+                    big={false} 
+                    data={data}
+                    onClick={(content) => onFilterClick(content)}
+                    />
             </div>
             <div className='search'>
                 <SearchBar/>
@@ -81,9 +208,6 @@ const BeerMenu = () => {
             }
            
             {isLoading && <p>Loading...</p>}
-        </div>
-        <div>
-            <Pagination/>
         </div>
     </STBeerMenuContainer>
   )
