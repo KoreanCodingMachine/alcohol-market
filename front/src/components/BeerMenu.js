@@ -18,15 +18,29 @@ const BeerMenu = () => {
     const [filteredName, setFilteredName] = useState(null)
     const [originData, setOriginData] = useState([])
     const [brewType, setBrewType] = useState(null)
-    const [country, setCountry] = useState([])
 
-    const countryFiltered = data.map((v,i) => {
-       return {v.country.split[0]: 1}
+    const countryFiltered = originData.map((v,i) => {
+        return v.country.split(' ')[0]
     })
-    console.log(data)
-    console.log('--------------', countryFiltered)
 
-    const brew = ['All','Lager', 'Ale', 'Ohters']
+    const uniqeCountry = [...new Set(countryFiltered)]
+
+    const brew = ['All','Lager', 'Ale', 'Others']
+
+    console.log(uniqeCountry)
+
+    const onChangeCountry = (e) => {
+        // console.log(e.target.value)
+
+        let countries = originData.map((v,i) => {
+            if (v.country.includes(e.target.value)) {
+                return v
+            }
+        }).filter((v) => v !==undefined )
+
+        setData([...countries])
+    }
+
 
     const getData = async () => {
         setIsLoading(prev => {
@@ -69,15 +83,6 @@ const BeerMenu = () => {
         }
     }
 
-    const countryFilter = () => {
-        let data = [...data]
-        
-        let countryFiltered = data.filter((v,i) => {
-            return v.country.split('')[0]
-        })
-
-        setCountry([...countryFiltered])
-    }
 
     
     const brewTypeFilter = (val) => {
@@ -281,8 +286,13 @@ const BeerMenu = () => {
                     onClick={(content) => onFilterClick(content)}
                     filteredName={filteredName}
                     />
-                <select>
-                <option value="javascript">JavaScript</option>              
+                <select onChange={onChangeCountry}>
+                {/* <option value="javascript">JavaScript</option>               */}
+                {
+                    uniqeCountry.map((v,i) => {
+                        return <option value={v}>{v}</option>
+                    })
+                }
                 </select>
             </div>
             <div className='search'>
