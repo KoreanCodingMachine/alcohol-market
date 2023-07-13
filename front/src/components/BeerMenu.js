@@ -6,6 +6,7 @@ import BeerCard from './BeerCard'
 import axios from 'axios'
 
 
+
 const BeerMenu = () => {
 
     const [isLoading, setIsLoading] = useState(false)
@@ -17,7 +18,13 @@ const BeerMenu = () => {
     const [filteredName, setFilteredName] = useState(null)
     const [originData, setOriginData] = useState([])
     const [brewType, setBrewType] = useState(null)
-    
+    const [country, setCountry] = useState([])
+
+    const countryFiltered = data.map((v,i) => {
+       return {v.country.split[0]: 1}
+    })
+    console.log(data)
+    console.log('--------------', countryFiltered)
 
     const brew = ['All','Lager', 'Ale', 'Ohters']
 
@@ -62,10 +69,18 @@ const BeerMenu = () => {
         }
     }
 
+    const countryFilter = () => {
+        let data = [...data]
+        
+        let countryFiltered = data.filter((v,i) => {
+            return v.country.split('')[0]
+        })
+
+        setCountry([...countryFiltered])
+    }
+
     
     const brewTypeFilter = (val) => {
-        console.log(val)
-        console.log(data)
         setBrewType(val)
 
         if (val === 'All') {
@@ -74,24 +89,39 @@ const BeerMenu = () => {
         }
 
         if (val === 'Ohters') {
+            let filtered = originData.filter((v,i) => {
+                if (v.type.includes(` `+'Ale') || v.type.includes('Lager')) {
+                    return 0
+                } else {
+                    return v
+                }
+            }).filter((v,i) => {
+                return v !== 0
+            })
 
+           setData([...filtered])
+          
         }
 
         if (val === 'Ale') {
-            let filtered = data.filter((v,i) => {
+            let filtered = originData.filter((v,i) => {
                 if (v.type.includes(` `+val) ) {
                     return v
                 }
             })
+
+            console.log('ale filtered', filtered)
             setData([...filtered])
         }
 
         if (val === 'Lager') {
-            let filtered = data.filter((v,i) => {
+            let filtered = originData.filter((v,i) => {
                 if (v.type.includes(val)) {
                     return v
                 }
             })
+            
+            console.log('lager filtered', filtered)
             setData([...filtered])
         }
        
@@ -173,12 +203,6 @@ const BeerMenu = () => {
     }, [page, hasMore])
 
 
-    useEffect(() => {
-        if (brewType !== null) {
-            setData(originData)
-            brewTypeFilter(brewType)
-        }
-    }, [brewType])
 
     useEffect(() => {
         console.log('filterName', filteredName)
@@ -257,12 +281,9 @@ const BeerMenu = () => {
                     onClick={(content) => onFilterClick(content)}
                     filteredName={filteredName}
                     />
-                <Filter  
-                    content={'국가순'} 
-                    data={data}
-                    onClick={(content) => onFilterClick(content)}
-                    filteredName={filteredName}
-                    />
+                <select>
+                <option value="javascript">JavaScript</option>              
+                </select>
             </div>
             <div className='search'>
                 <SearchBar data={data} onSearch={onSearchEvent}/>
