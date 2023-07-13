@@ -12,12 +12,15 @@ const BeerMenu = () => {
     const [page, setPage] = useState(1)
     const [data, setData] = useState([])
     const [hasMore, setHasMore] = useState(true)
-    const [next, setNext] = useState([])
+    const [hasNewData, setHasNewData] = useState([])
     const [filtered, setFiltered] = useState(false)
     const [filteredName, setFilteredName] = useState(null)
 
     const getData = async () => {
-        setIsLoading(prev => !prev)
+        setIsLoading(prev => {
+            return !prev
+        })
+       
         const a = await axios.get(`http://localhost:3333/api/beer/main?page=${page}`)
         setHasMore(prev => {
             if (!a.data.hasMore) {
@@ -28,7 +31,7 @@ const BeerMenu = () => {
          })
         setIsLoading(prev => !prev)
 
-        setNext(prevData=> [...next])
+        setHasNewData((prev) => [...prev]) // 새로운 값 최신화 
         setData(prevData =>[...prevData, ...a.data.items])
 
     }
@@ -42,15 +45,13 @@ const BeerMenu = () => {
     }
 
     const onFilterClick = (content) => {
-        
         setFiltered(prev => {
             return true
         })
 
-        if (content === '도수순' || filteredName === '도수순') {
+        if (content === '도수순') {
             setFilteredName(prevName => '도수순')
             let filtered = [...data]
-            console.log('-----------------filtered', filtered)
             filtered.sort((a,b) => {
                 if (a.alcohol > b.alcohol) {
                     return 1
@@ -70,7 +71,7 @@ const BeerMenu = () => {
             })
         }
 
-        if (content === '평점순' || filteredName === '평점순') {
+        if (content === '평점순') {
             setFilteredName(prev => '평점순')
             let filtered = [...data]
             filtered.sort((a,b) => {
@@ -107,8 +108,9 @@ const BeerMenu = () => {
 
 
     useEffect(() => {
+        console.log('filterName', filteredName)
         if (filteredName === '도수순') {
-            let newData = [...data, ...next]
+            let newData = [...data]
                 newData = data.sort((a,b) => {
                 if (a.alcohol > b.alcohol) {
                     return 1
@@ -129,7 +131,7 @@ const BeerMenu = () => {
         }
 
         if (filteredName === '평점순') {
-            let newData = [...data, ...next]
+            let newData = [...data]
                 newData = data.sort((a,b) => {
                 if (a.rating > b.rating) {
                     return 1
@@ -151,7 +153,7 @@ const BeerMenu = () => {
 
 
 
-    },[filtered, filteredName, next])
+    },[filtered, filteredName, hasNewData])
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -170,21 +172,21 @@ const BeerMenu = () => {
             <div className='filter'>
                 <Filter  
                     content={'도수순'} 
-                    big={true}  
                     data={data}
                     onClick={(content) => onFilterClick(content)}
+                    filteredName={filteredName}
                     />
                 <Filter  
                     content={'평점순'} 
-                    big={false} 
                     data={data}
                     onClick={(content) => onFilterClick(content)}
+                    filteredName={filteredName}
                     />
                 <Filter  
                     content={'국가순'} 
-                    big={false} 
                     data={data}
                     onClick={(content) => onFilterClick(content)}
+                    filteredName={filteredName}
                     />
             </div>
             <div className='search'>
