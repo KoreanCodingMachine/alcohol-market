@@ -16,7 +16,10 @@ const BeerMenu = () => {
     const [filtered, setFiltered] = useState(false)
     const [filteredName, setFilteredName] = useState(null)
     const [originData, setOriginData] = useState([])
+    const [brewType, setBrewType] = useState(null)
+    
 
+    const brew = ['All','Lager', 'Ale', 'Ohters']
 
     const getData = async () => {
         setIsLoading(prev => {
@@ -41,20 +44,60 @@ const BeerMenu = () => {
 
     const onSearchEvent = (val) => {
         console.log(data)
-        
+        console.log('val', val)
         let filtered = data.filter((v,i) => {
             let title = v.title.slice(0,8)
-            if (val.length >=2 && title.toLowerCase().includes(val.toLowerCase())) {
+            if (title.toLowerCase().includes(val.toLowerCase())) {
                 return v
             }
         })
 
-        if (filtered.length) {
-            setData([...filtered])
+        if (val.length) {
+            setData(prev => [...filtered])
+        }
+
+        if (val.length <=1) {
+            console.log(val.length)
+            setData(originData)
         }
     }
 
     
+    const brewTypeFilter = (val) => {
+        console.log(val)
+        console.log(data)
+        setBrewType(val)
+
+        if (val === 'All') {
+            setData([...originData])
+            return
+        }
+
+        if (val === 'Ohters') {
+
+        }
+
+        if (val === 'Ale') {
+            let filtered = data.filter((v,i) => {
+                if (v.type.includes(` `+val) ) {
+                    return v
+                }
+            })
+            setData([...filtered])
+        }
+
+        if (val === 'Lager') {
+            let filtered = data.filter((v,i) => {
+                if (v.type.includes(val)) {
+                    return v
+                }
+            })
+            setData([...filtered])
+        }
+       
+    }
+
+
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = document.documentElement
 
@@ -131,6 +174,13 @@ const BeerMenu = () => {
 
 
     useEffect(() => {
+        if (brewType !== null) {
+            setData(originData)
+            brewTypeFilter(brewType)
+        }
+    }, [brewType])
+
+    useEffect(() => {
         console.log('filterName', filteredName)
         if (filteredName === '도수순') {
             let newData = [...data]
@@ -189,9 +239,9 @@ const BeerMenu = () => {
     <STBeerMenuContainer>
         <h1>BeerMenu</h1>
         <div className='beer_menu'>
-            <h2>All</h2>
-            <h2>Lager</h2>
-            <h2>Ale</h2>
+           {brew.map((v,i) => {
+            return <h2 key={i} onClick={() => {brewTypeFilter(v)}}>{v}</h2>
+           })}
         </div>
         <div className='filter_search'>
             <div className='filter'>
@@ -248,6 +298,14 @@ const STBeerMenuContainer = styled.div`
     padding-top: 5rem;
     flex-direction: column;
     align-items: center;
+
+    h2 {
+        cursor: pointer;
+    }
+
+    h2:hover {
+        color:yellowgreen;
+    }
 
     .beer_card-container {
         width: 832px;

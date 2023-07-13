@@ -26,7 +26,10 @@ const STSearchBar = styled.input`
     background: #d9d9d9;
     border: 1px solid white;
     border-radius: 30px;
-    font-size: 20px;
+    font-size: 24px;
+    padding-left: 42px;
+    line-height: 48px;
+
 `
 
 const STSearchContainer = styled.div`
@@ -36,7 +39,7 @@ const STSearchContainer = styled.div`
         width: 32px;
         height: 32px;
         position:absolute;
-        left: 0;
+        left: 7px;
    }
 
    
