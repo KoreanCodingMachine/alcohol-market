@@ -5,8 +5,8 @@ import src from '../asset/beer.jpeg'
 const BeerCard = ({title,image,rating,country,alcohol,type}) => {
   return (
     <STBeerCard>
-        <div>
-            <img src={image} width={260} height={312}>
+        <div className='img_wrapper'>
+            <img className='img' src={image}>
             </img>
         </div>
         <div className='beercard_content'>
@@ -20,14 +20,6 @@ const BeerCard = ({title,image,rating,country,alcohol,type}) => {
         <div className='beercard_info'>
             {type} / {alcohol}
         </div>
-        {/* <div className='beercard_smell-wrapper'>
-            <div className='beercard_smell'>
-                사과향
-            </div>
-            <div className='beercard_smell'>
-                사과향
-            </div>
-        </div> */}
     </STBeerCard>
   )
 }
@@ -40,6 +32,18 @@ const STBeerCard = styled.div`
     flex-direction: column;
     gap: 5px;
     overflow: auto;
+    padding: 5px;
+    
+    .img_wrapper {
+        width: 100%;
+        height: calc(100% - 125px);
+    }
+
+    .img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
     .beercard_content {
         display: flex;

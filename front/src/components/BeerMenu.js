@@ -15,6 +15,8 @@ const BeerMenu = () => {
     const [hasNewData, setHasNewData] = useState([])
     const [filtered, setFiltered] = useState(false)
     const [filteredName, setFilteredName] = useState(null)
+    const [originData, setOriginData] = useState([])
+
 
     const getData = async () => {
         setIsLoading(prev => {
@@ -33,8 +35,25 @@ const BeerMenu = () => {
 
         setHasNewData((prev) => [...prev]) // 새로운 값 최신화 
         setData(prevData =>[...prevData, ...a.data.items])
+        setOriginData(prevData => [...prevData, ...a.data.items])
 
     }
+
+    const onSearchEvent = (val) => {
+        console.log(data)
+        
+        let filtered = data.filter((v,i) => {
+            let title = v.title.slice(0,8)
+            if (val.length >=2 && title.toLowerCase().includes(val.toLowerCase())) {
+                return v
+            }
+        })
+
+        if (filtered.length) {
+            setData([...filtered])
+        }
+    }
+
     
     const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = document.documentElement
@@ -97,6 +116,10 @@ const BeerMenu = () => {
             console.log('국가순')
         }
 
+        if (content === filteredName) {
+            setFilteredName(null)
+        }
+
     }
 
     useEffect(() => {
@@ -151,7 +174,9 @@ const BeerMenu = () => {
             })
         }
 
-
+        if (filteredName === null) {
+           setData(originData)
+        }
 
     },[filtered, filteredName, hasNewData])
 
@@ -190,7 +215,7 @@ const BeerMenu = () => {
                     />
             </div>
             <div className='search'>
-                <SearchBar/>
+                <SearchBar data={data} onSearch={onSearchEvent}/>
             </div>
         </div>
         <div className='beer_card-container'>

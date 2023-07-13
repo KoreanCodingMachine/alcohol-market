@@ -1,11 +1,19 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import { AiOutlineSearch } from 'react-icons/ai'
 
-const SearchBar = () => {
+const SearchBar = ({data, onSearch}) => {
+
+  const [input, setInput] = useState(null)
+  
+
+  const onTextInput = (e) => {
+    onSearch(e.target.value)
+  }
+
   return (
     <STSearchContainer>
-        <STSearchBar />
+        <STSearchBar onChange={onTextInput}/>
         <AiOutlineSearch/>
     </STSearchContainer>
     
@@ -18,6 +26,7 @@ const STSearchBar = styled.input`
     background: #d9d9d9;
     border: 1px solid white;
     border-radius: 30px;
+    font-size: 20px;
 `
 
 const STSearchContainer = styled.div`
@@ -29,6 +38,8 @@ const STSearchContainer = styled.div`
         position:absolute;
         left: 0;
    }
+
+   
 
    display: flex;
    justify-content: center;
