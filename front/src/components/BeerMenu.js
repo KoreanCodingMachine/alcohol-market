@@ -371,7 +371,7 @@ const BeerMenu = () => {
           
             let newData = [...originData]
             let firstData = []
-            let secondData = []
+            let finalData = []
             switch(filteredName) {
                 case '도수순' : 
                     firstData = newData.sort((a,b) => {
@@ -412,23 +412,23 @@ const BeerMenu = () => {
                     setData([...firstData])
                     break;
                 case 'Lager' :
-                    let filtered = newData.filter((v,i) => {
+                    finalData = newData.filter((v,i) => {
                         if (v.type.includes('Lager') ) {
                             return v
                         }
                     })
-                    setData([...filtered])
+                    setData([...finalData])
                     break;
                 case 'Ale' :
-                    let filteredAle = newData.filter((v,i) => {
+                    finalData = newData.filter((v,i) => {
                         if (v.type.includes(` `+'Ale') ) {
                             return v
                         }
-                    setData([...filteredAle])   
                     })
-
+                    setData([...finalData])
+                    break;
                 case 'Others' :
-                    let filteredOthers = newData.filter((v,i) => {
+                        finalData = newData.filter((v,i) => {
                         if (v.type.includes(` `+'Ale') || v.type.includes('Lager')) {
                             return 0
                         } else {
@@ -437,9 +437,10 @@ const BeerMenu = () => {
                     }).filter((v,i) => {
                         return v !== 0
                     })
-                    setData([...filteredOthers])   
+                    setData([...finalData]) 
+                    break;  
                     default : 
-                    return []
+                        return []
             }
         }    
     } ,[originData, filteredName, doubleFilterData])
