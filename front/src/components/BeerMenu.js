@@ -20,7 +20,8 @@ const BeerMenu = () => {
     const [brewType, setBrewType] = useState(null) // all , lager , ale , others
     const [brewTypeData, setBrewTypeData] = useState([])
     const [filterData, setFilterData] = useState([])
-   
+    const [doubleFilterData, setDoubleFilterData] = useState([]) // 2중 필터링한 데이터
+
     const countryFiltered = originData.map((v,i) => {
         return v.country.split(' ')[0]
     })
@@ -68,7 +69,7 @@ const BeerMenu = () => {
        
     }
 
-    const onSearchEvent = (val) => {
+    const onSearchEvent = (val) => {    
         let filtered = data.filter((v,i) => {
             let title = v.title.slice(0,8)
             if (title.toLowerCase().includes(val.toLowerCase())) {
@@ -364,18 +365,94 @@ const BeerMenu = () => {
             if (brewType === 'Others') {
                 brewTypeFilter('Others')
             }
-        }       
-    } ,[originData, filteredName])
+        }
+        // 2중 필터링 + 무한 스크롤 
+        if (filteredName !== null && brewType !== null) {
+          
+            let newData = [...originData]
+            let firstData = []
+            let secondData = []
+            switch(filteredName) {
+                case '도수순' : 
+                    firstData = newData.sort((a,b) => {
+                        if (a.alcohol > b.alcohol) {
+                            return 1
+                        }
+
+                        if (a.alcohol < b.alcohol) {
+                            return -1
+                        }
+                        return 0
+                    })
+                    break;
+                case '평점순' :
+                    firstData = newData.sort((a,b) => {
+                        if (a.rating > b.rating) {
+                            return 1
+                        }
+
+                        if (a.rating < b.rating) {
+                            return -1
+                        }
+                        return 0
+                    })   
+                    break; 
+                case '국가순' :  firstData = newData.map((v,i) => {
+                    if (v.country.includes(filteredName)) {
+                        return v
+                    }
+                }).filter((v) => v !==undefined )
+                    break;
+                
+                default: return []    
+
+            }
+            switch(brewType) {
+                case 'All' :
+                    setData([...firstData])
+                    break;
+                case 'Lager' :
+                    let filtered = newData.filter((v,i) => {
+                        if (v.type.includes('Lager') ) {
+                            return v
+                        }
+                    })
+                    setData([...filtered])
+                    break;
+                case 'Ale' :
+                    let filteredAle = newData.filter((v,i) => {
+                        if (v.type.includes(` `+'Ale') ) {
+                            return v
+                        }
+                    setData([...filteredAle])   
+                    })
+
+                case 'Others' :
+                    let filteredOthers = newData.filter((v,i) => {
+                        if (v.type.includes(` `+'Ale') || v.type.includes('Lager')) {
+                            return 0
+                        } else {
+                            return v
+                        }
+                    }).filter((v,i) => {
+                        return v !== 0
+                    })
+                    setData([...filteredOthers])   
+                    default : 
+                    return []
+            }
+        }    
+    } ,[originData, filteredName, doubleFilterData])
 
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [isLoading]);
+    }, [isLoading])
 
 
     useEffect(() => {
-        if (filteredName !== null && brewType !== null && !isLoading) {
+        if (filteredName !== null && brewType !== null) {
             if (filteredName === '도수순'){
                 let doubleFilterData = [...brewTypeData]
                 doubleFilterData.sort((a,b) => {
@@ -387,6 +464,7 @@ const BeerMenu = () => {
                     }
                     return 0
                 })
+                setDoubleFilterData([...doubleFilterData])
                 setData([...doubleFilterData])
             }
             
@@ -401,7 +479,7 @@ const BeerMenu = () => {
                     }
                     return 0
                 })
-                console.log(doubleFilterData)
+                setDoubleFilterData([...doubleFilterData])
                 setData([...doubleFilterData])
             }
             if (filteredName === '국가순') {
@@ -411,7 +489,7 @@ const BeerMenu = () => {
                         return v
                     }
                 }).filter((v) => v !==undefined )
-
+                setDoubleFilterData([...doubleFilterData])
                 setData([...doubleFilterWithCountryData])
             }
         } 
