@@ -15,13 +15,12 @@ const BeerMenu = () => {
     const [hasMore, setHasMore] = useState(true)
     const [hasNewData, setHasNewData] = useState([])
     const [filtered, setFiltered] = useState(false)
-    const [filteredName, setFilteredName] = useState(null)
+    const [filteredName, setFilteredName] = useState(null) // 도수순, 평점순, 국가순
     const [originData, setOriginData] = useState([])
-    const [brewType, setBrewType] = useState(null)
+    const [brewType, setBrewType] = useState(null) // all , lager , ale , others
     const [brewTypeData, setBrewTypeData] = useState([])
     const [filterData, setFilterData] = useState([])
-    
-
+   
     const countryFiltered = originData.map((v,i) => {
         return v.country.split(' ')[0]
     })
@@ -59,9 +58,14 @@ const BeerMenu = () => {
         setIsLoading(prev => !prev)
 
         setHasNewData((prev) => [...prev]) // 새로운 값 최신화 
-        setData(prevData =>[...prevData, ...a.data.items])
-        setOriginData(prevData => [...prevData, ...a.data.items])
-        
+        if (filteredName === null && brewType === null) {
+            setData(prevData =>[...prevData, ...a.data.items])
+            setOriginData(prevData => [...prevData, ...a.data.items])
+        } else {
+            setData(prevData =>[...prevData, ...a.data.items])
+            setOriginData(prevData => [...prevData, ...a.data.items])
+        }
+       
     }
 
     const onSearchEvent = (val) => {
@@ -90,7 +94,7 @@ const BeerMenu = () => {
             return
         }
 
-        if (val === 'Ohters') {
+        if (val === 'Others') {
             let filtered = originData.filter((v,i) => {
                 if (v.type.includes(` `+'Ale') || v.type.includes('Lager')) {
                     return 0
@@ -133,6 +137,7 @@ const BeerMenu = () => {
 
         if (scrollTop + clientHeight >= scrollHeight && !isLoading && hasMore) {
             setPage(prevPage => prevPage + 1)
+
         }
     }
 
@@ -183,9 +188,9 @@ const BeerMenu = () => {
             })
         }
 
-        if (content === filteredName) {
-            setFilteredName(null)
-        }
+        // if (content === filteredName) {
+        //     setFilteredName(null)
+        // }
 
     }
 
@@ -196,6 +201,54 @@ const BeerMenu = () => {
         
     }, [page, hasMore])
 
+
+    useEffect(() => {
+        const brewTypeFilter = (val) => {
+        setBrewType(val)
+        
+        if (val === 'All') {
+            setData([...originData])
+            setBrewTypeData([...originData])
+            return
+        }
+
+        if (val === 'Others') {
+            let filtered = originData.filter((v,i) => {
+                if (v.type.includes(` `+'Ale') || v.type.includes('Lager')) {
+                    return 0
+                } else {
+                    return v
+                }
+            }).filter((v,i) => {
+                return v !== 0
+            })
+           setBrewTypeData([...filtered])
+           setData([...filtered])
+          
+        }
+
+        if (val === 'Ale') {
+            let filtered = originData.filter((v,i) => {
+                if (v.type.includes(` `+val) ) {
+                    return v
+                }
+            })
+            setBrewTypeData([...filtered])
+            setData([...filtered])
+        }
+
+        if (val === 'Lager') {
+            let filtered = originData.filter((v,i) => {
+                if (v.type.includes(val)) {
+                    return v
+                }
+            })
+            setBrewTypeData([...filtered])
+            setData([...filtered])
+        }
+       
+    }
+    } ,[])
 
 
     useEffect(() => {
@@ -248,17 +301,81 @@ const BeerMenu = () => {
     },[filtered, filteredName, hasNewData])
 
     useEffect(() => {
+        // 도수순 , 평점순 , 국가순 선택 후 스크롤 시 
+        if (filteredName !== null && brewType === null) {
+            let scrollWithFilterData = [...originData]
+            if (filteredName === '도수순') {
+                console.log('scroll')
+                scrollWithFilterData.sort((a,b) => {
+                    if (a.alcohol > b.alcohol) {
+                        return 1
+                    }
+
+                    if (a.alcohol < b.alcohol) {
+                        return -1
+                    }
+
+                    return 0
+                })
+                setData([... scrollWithFilterData])
+            }
+            if (filteredName === '평점순') {
+                console.log('scroll')
+                scrollWithFilterData.sort((a,b) => {
+                    if (a.rating > b.rating) {
+                        return 1
+                    }
+
+                    if (a.rating < b.rating) {
+                        return -1
+                    }
+
+                    return 0
+                })
+                setData([... scrollWithFilterData])
+            }
+            if (filteredName !== '도수순' && filteredName !== '평점순') {
+                console.log('scroll')
+                console.log('data', scrollWithFilterData)
+                console.log(filteredName)
+                let newData = scrollWithFilterData.map((v,i) => {
+                    if (v.country.includes(filteredName)) {
+                        return v
+                    }
+                }).filter((v) => v !==undefined )
+
+                setData([...newData])
+            }
+        }
+        // beer Menu만 선택하고 스크롤 시 
+        if (filteredName === null && brewType !== null) {
+            if (brewType === 'All') {
+                brewTypeFilter('All')
+            }
+
+            if (brewType === 'Lager') {
+                brewTypeFilter('Lager')
+            }
+
+            if (brewType === 'Ale') {
+                brewTypeFilter('Ale')
+            }
+
+            if (brewType === 'Others') {
+                brewTypeFilter('Others')
+            }
+        }       
+    } ,[originData, filteredName])
+
+
+    useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isLoading]);
 
 
     useEffect(() => {
-       
-        console.log('brewtypedata', brewTypeData)
-        console.log('filterData', filterData)
-        console.log('filterName', filteredName)
-        if (filteredName !== null && brewType !== null) {
+        if (filteredName !== null && brewType !== null && !isLoading) {
             if (filteredName === '도수순'){
                 let doubleFilterData = [...brewTypeData]
                 doubleFilterData.sort((a,b) => {
@@ -270,7 +387,6 @@ const BeerMenu = () => {
                     }
                     return 0
                 })
-                console.log(doubleFilterData)
                 setData([...doubleFilterData])
             }
             
@@ -288,7 +404,6 @@ const BeerMenu = () => {
                 console.log(doubleFilterData)
                 setData([...doubleFilterData])
             }
-
             if (filteredName === '국가순') {
                 let doubleFilterData = [...brewTypeData]
                 let doubleFilterWithCountryData = doubleFilterData.map((v,i) => {
@@ -299,10 +414,8 @@ const BeerMenu = () => {
 
                 setData([...doubleFilterWithCountryData])
             }
-        } else {
-            
-        }
-    }, [filteredName, brewType])
+        } 
+    }, [filteredName, brewType, filterData])
 
   return (
     <STBeerMenuContainer>
@@ -408,3 +521,5 @@ const STBeerMenuContainer = styled.div`
 `
 
 export default BeerMenu
+
+
