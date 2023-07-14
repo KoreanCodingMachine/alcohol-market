@@ -3,8 +3,6 @@ import styled from 'styled-components'
 
 export const Filter = ({content, onClick, filteredName}) => {
   
-  console.log('content', 'filteredName', content, filteredName)
-
   return (
         <STFilter 
         onClick={() => {onClick(content)}} 
