@@ -1,23 +1,21 @@
 import React, { useState ,useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styled from 'styled-components'
 
 function Navbar() {
-
+    
     const [email, setEmail] = useState(null)
-    const [isLogined, setIsLogined] = useState(false)
+    const location = useLocation()
 
-    useEffect(() => {   
-       
-        const fetchData = () => {
-            const user = localStorage.getItem('token');
-            const storedEmail = localStorage.getItem('email');
-            setEmail(storedEmail);
-            setIsLogined(true);
-          };
-      
-          fetchData();
-
-    }, [email, isLogined])
+    useEffect(() => {    
+        console.log(location)
+        const storedEmail = localStorage.getItem('email')
+        console.log('stored', storedEmail)
+        if (storedEmail) {
+            setEmail(storedEmail)
+            console.log(email)
+        }
+    }, [email, location])
 
     return ( 
         <StyledNavbar>
@@ -27,7 +25,7 @@ function Navbar() {
                 <li>Category</li>
                 <li>Menu</li>
             </ul>
-                {email !== null ?  <div className="user">welcome {email}</div>  : <div className="icon"></div>}
+                {email  !== null ?  <div className="user">welcome {email}</div>  : <div className="icon"></div>}
         </StyledNavbar>
      );
 }

@@ -36,8 +36,6 @@ function Login() {
 
         const { data, status } = await axios.post('http://localhost:3333/api/signin', {username:email, password})
 
-        console.log(status)
-
         if (status === 200) {
           localStorage.setItem('token', data.token)
           localStorage.setItem('email', email)
