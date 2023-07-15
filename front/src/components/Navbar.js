@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState ,useEffect } from "react";
 import styled from 'styled-components'
 
 function Navbar() {
+
+    const [email, setEmail] = useState(null)
+    const [isLogined, setIsLogined] = useState(false)
+
+    useEffect(() => {   
+       
+        const fetchData = () => {
+            const user = localStorage.getItem('token');
+            const storedEmail = localStorage.getItem('email');
+            setEmail(storedEmail);
+            setIsLogined(true);
+          };
+      
+          fetchData();
+
+    }, [email, isLogined])
+
     return ( 
         <StyledNavbar>
             <li className="navbar_title">BeerU</li>
@@ -10,7 +27,7 @@ function Navbar() {
                 <li>Category</li>
                 <li>Menu</li>
             </ul>
-                <div className="icon"></div>
+                {email !== null ?  <div className="user">welcome {email}</div>  : <div className="icon"></div>}
         </StyledNavbar>
      );
 }
@@ -35,6 +52,11 @@ const StyledNavbar = styled.ul`
         height: 50px;
         border-radius: 50%;
         background: #f5f5f5;
+        margin-left: auto;
+        margin-right: 2rem;
+    }
+
+    .user {
         margin-left: auto;
         margin-right: 2rem;
     }

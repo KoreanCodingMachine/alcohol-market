@@ -18,7 +18,7 @@ const StyledInput = styled.input`
     border: none;
     outline: none;
     color: #3c354e;
-    font-size: 50px;
+    font-size: 25px;
     font-weight: bold;
     
     &:focus {
@@ -32,6 +32,6 @@ const StyledInput = styled.input`
     &::placeholder {
         color: #b9abe099;
         font-weight: 100;
-        font-size: 1rem;
+        font-size: 25px;    
     }
 `

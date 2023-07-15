@@ -26,7 +26,7 @@ const Footer = () => {
 const STFooter = styled.div`
     background: #d9d9d9;
     width: 100%;
-    height: 484px;
+    height: 200px;
     .information {
         display: flex;
         justify-content: center;

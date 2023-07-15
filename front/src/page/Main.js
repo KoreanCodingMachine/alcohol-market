@@ -8,6 +8,7 @@ import BeerMenu from '../components/BeerMenu';
 
 
 function Main() {
+    
     return (  
         <div>
             <Banner />

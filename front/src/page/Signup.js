@@ -38,7 +38,8 @@ function Signup() {
       console.log(status)
 
       if (status === 201) {
-        console.log(data)
+        alert(`${email} 로그인 성공`)
+        navigate('/login')
       }
     }
 

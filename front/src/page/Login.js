@@ -39,8 +39,10 @@ function Login() {
         console.log(status)
 
         if (status === 200) {
-          console.log(data)
           localStorage.setItem('token', data.token)
+          localStorage.setItem('email', email)
+          alert(`${email} 로그인 성공`)
+          navigate('/')
         }
         
     }
