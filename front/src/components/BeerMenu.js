@@ -21,6 +21,7 @@ const BeerMenu = () => {
     const [brewTypeData, setBrewTypeData] = useState([])
     const [filterData, setFilterData] = useState([])
     const [doubleFilterData, setDoubleFilterData] = useState([]) // 2중 필터링한 데이터
+    const [doubleClicked, setDoubleClicked] = useState(false)
 
     const countryFiltered = originData.map((v,i) => {
         return v.country.split(' ')[0]
@@ -147,7 +148,7 @@ const BeerMenu = () => {
             return true
         })
 
-        if (content === '도수순') {
+        if (content === '도수순' && filteredName !== '도수순') {
             setFilteredName(prevName => '도수순')
             let filtered = [...data]
             filtered.sort((a,b) => {
@@ -160,7 +161,7 @@ const BeerMenu = () => {
                 }
 
                 return 0
-            })   
+            }).reverse()   
             setFilterData([...filtered])
             setData(prev => {
                 if (prev.length) {
@@ -169,7 +170,7 @@ const BeerMenu = () => {
             })
         }
 
-        if (content === '평점순') {
+        if (content === '평점순' && filteredName !== '평점순') {
             setFilteredName(prev => '평점순')
             let filtered = [...data]
             filtered.sort((a,b) => {
@@ -182,16 +183,17 @@ const BeerMenu = () => {
                 }
 
                 return 0
-            })
+            }).reverse()
             setFilterData([...filtered])
             setData(prev => {
                     return [...filtered]
             })
         }
 
-        // if (content === filteredName) {
-        //     setFilteredName(null)
-        // }
+        if (content === filteredName) {
+            setFilteredName(null)
+            setData([...originData])
+        }
 
     }
 
@@ -307,6 +309,8 @@ const BeerMenu = () => {
             let scrollWithFilterData = [...originData]
             if (filteredName === '도수순') {
                 console.log('scroll')
+                console.log(filtered)
+                console.log(filteredName)
                 scrollWithFilterData.sort((a,b) => {
                     if (a.alcohol > b.alcohol) {
                         return 1
@@ -317,11 +321,12 @@ const BeerMenu = () => {
                     }
 
                     return 0
-                })
+                }).reverse()
                 setData([... scrollWithFilterData])
             }
             if (filteredName === '평점순') {
                 console.log('scroll')
+                console.log(filtered)
                 scrollWithFilterData.sort((a,b) => {
                     if (a.rating > b.rating) {
                         return 1
@@ -332,11 +337,12 @@ const BeerMenu = () => {
                     }
 
                     return 0
-                })
+                }).reverse()
                 setData([... scrollWithFilterData])
             }
             if (filteredName !== '도수순' && filteredName !== '평점순') {
                 console.log('scroll')
+                console.log(filtered)
                 console.log('data', scrollWithFilterData)
                 console.log(filteredName)
                 let newData = scrollWithFilterData.map((v,i) => {
@@ -511,15 +517,17 @@ const BeerMenu = () => {
                     data={data}
                     onClick={(content) => onFilterClick(content)}
                     filteredName={filteredName}
+                    doubleClicked={doubleClicked}
                     />
                 <Filter  
                     content={'평점순'} 
                     data={data}
                     onClick={(content) => onFilterClick(content)}
                     filteredName={filteredName}
+                    doubleClicked={doubleClicked}
                     />
                 <select onChange={onChangeCountry}>
-                < option value="" selected disabled hidden >선택해주세요</option>
+                < option value="국가별" selected disabled hidden >국가별</option>
                 {
                     
                     uniqeCountry.map((v,i) => {

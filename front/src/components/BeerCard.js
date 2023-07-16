@@ -18,7 +18,7 @@ const BeerCard = ({title,image,rating,country,alcohol,type}) => {
             {title.slice(0,8)}
         </h1>
         <div className='beercard_info'>
-            {type} / {alcohol}
+            {type} / {alcohol}%
         </div>
     </STBeerCard>
   )

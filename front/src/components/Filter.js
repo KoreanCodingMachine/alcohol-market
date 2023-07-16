@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Filter = ({content, onClick, filteredName}) => {
+export const Filter = ({content, onClick, filteredName, doubleClicked}) => {
   
+
+  console.log(filteredName)
+  console.log('-----', doubleClicked)
   return (
         <STFilter 
         onClick={() => {onClick(content)}} 
@@ -21,7 +24,7 @@ const STFilter = styled.div`
     border-radius: 30px;
     text-align:center;
     line-height: 36px;
-    background: ${props => props.content === props.filteredName? "red" : "#b6b6b6"};
+    background: ${props => props.content === props.filteredName ? "red" : "#b6b6b6"};
     color: #f2f2f2;
     cursor: pointer;
 `

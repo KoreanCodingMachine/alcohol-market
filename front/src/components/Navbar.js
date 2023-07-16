@@ -1,8 +1,21 @@
 import React, { useState ,useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from 'styled-components'
-import { Avatar } from "@chakra-ui/react";
+import { Avatar, forwardRef } from "@chakra-ui/react";
 import DropDown from "./DropDown";
+import {
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    MenuItemOption,
+    MenuGroup,
+    MenuOptionGroup,
+    MenuDivider,
+    Button,
+  } from '@chakra-ui/react'
+
+
 
 function Navbar() {
     
@@ -39,6 +52,15 @@ function Navbar() {
 
     console.log(document.querySelector('.best_container'))
 
+
+    const customMenuButton = forwardRef((props, ref) => {
+        return (
+            <Avatar className="user" src='https://bit.ly/broken-link' ref={ref} {...props} style={{marginLeft: 'auto', marginRight:'2rem'}}>
+                {props.children}
+            </Avatar>
+        )
+    })
+
     return ( 
         <StyledNavbar>
             <li className="navbar_title">BeerU</li>
@@ -49,17 +71,14 @@ function Navbar() {
             </ul>
                 {
                     email  !== null 
-                     ? <div className="dropdown_wrapper">
-                       <Avatar className="user" src='https://bit.ly/broken-link' onClick={() => {setDropDownOpen(prev => !prev)}}/>
-                       {
-                       dropDownOpen === true 
-                       ? 
-                       <select> 
-                         <option value={'profile'}>프로필</option>
-                         <option value={'logout'}>로그아웃</option>
-                       </select> 
-                       : null }
-                       </div>
+                     ? 
+                     <Menu>
+                        <MenuButton isActive={dropDownOpen} as={customMenuButton}></MenuButton>
+                        <MenuList>
+                            <MenuItem>프로필</MenuItem>
+                            <MenuItem>로그아웃</MenuItem>
+                        </MenuList>
+                    </Menu>
                      :
                      <p className='user' onClick={() => {navigate('/login')}}>로그인</p>
                 }
@@ -116,6 +135,12 @@ const StyledNavbar = styled.ul`
         margin: 0 auto;
        }
     }
+
+`
+
+const STMenu = styled(Menu)` 
+   margin-left: auto;
+
 `
 
 export default Navbar;

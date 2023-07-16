@@ -1,19 +1,26 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components'
-import axios from 'axios'
-import src from '../asset/beer.jpeg'
+import axios from 'axios'   
+
 
 function Best() {
 
+    const [best, setBest] = useState([])
+
     const getData = async () => {
         const { data , status } = await axios.get(`http://localhost:3333/api/beer/top`)
-        console.log(data)
-        console.log(status)
+       
+        if (status === 200) {
+            console.log(data)
+            setBest([...data])
+        }
+       
     }
 
 
     useEffect(() => {
        getData()
+       console.log(best)
     }, [])
 
 
@@ -21,26 +28,30 @@ function Best() {
             <BestContainer className='best_container'>
                 <h4>Best</h4>
                 <p>가장 인기있는 맥주를 만나보세요</p>
-                <StBoxContainer>
+                {best.length > 0 && <StBoxContainer>
                     <StBox>
                         <div>1</div>
-                        <img src={src}></img>
+                        <img src={best[0].image}></img>
                     </StBox>
                     <StSecondContainer>
                         <StBoxSecond>
                             <div>2</div>
+                            <img src={best[1].image}></img>
                         </StBoxSecond>
                         <StBoxSecond>
                             <div>3</div>
+                            <img src={best[2].image}></img>
                         </StBoxSecond>
                         <StBoxSecond>
                             <div>4</div>
+                            <img src={best[3].image}></img>
                         </StBoxSecond>
                         <StBoxSecond>
                             <div>5</div>
+                            <img src={best[4].image}></img>
                         </StBoxSecond>
                     </StSecondContainer>
-                </StBoxContainer>
+                </StBoxContainer>}
             </BestContainer>
         
      );
@@ -68,22 +79,7 @@ const StBoxContainer = styled.div`
 const StBox = styled.div`
     width: 356px;
     height: 460px;
-    background-color: #d9d9d9;
-
-    div {
-        width: 52px;
-        height: 52px;
-        background: #f1f1f1;
-        text-align: center;
-        line-height: 52px;
-        font-weight: bold;
-    }
-`
-
-const StBoxSecond = styled.div`
-    width: calc(50% - 5px);
-    height: 225px;
-    background-color: #d9d9d9;
+    background-color: white;
 
     div {
         width: 52px;
@@ -95,7 +91,30 @@ const StBoxSecond = styled.div`
     }
 
     img {
-        object-fit: cover;
+        width: 100%;
+        height: calc(100% - 52px);
+        object-fit: contain;
+    }
+`
+
+const StBoxSecond = styled.div`
+    width: calc(50% - 5px);
+    height: 225px;
+    background-color: white;
+    object-fit: contain;
+    div {
+        width: 52px;
+        height: 52px;
+        background: #f1f1f1;
+        text-align: center;
+        line-height: 52px;
+        font-weight: bold;
+    }
+
+    img {
+        width: 100%;
+        height: calc(100% - 52px);
+        object-fit: contain;
     }
 `
 

@@ -7,6 +7,14 @@ import { LoginWith, HorizontalRule } from "../styles/common";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import '../styles/Login.css'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react'
+
+
 
 function Signup() {
 
@@ -31,17 +39,27 @@ function Signup() {
 
 
     const onSubmit = async () => {
-      const { email, password } = inputs
+      const { email, password, passwordConfirm } = inputs
+
+      if (password !== passwordConfirm) {
+        return (
+         <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Your browser is outdated!</AlertTitle>
+          <AlertDescription>Your Chakra experience may be degraded.</AlertDescription>
+         </Alert>
+         )}
 
       const { data, status } = await axios.post('http://localhost:3333/api/signup', { username:email, password })
 
       console.log(status)
 
       if (status === 201) {
-        alert(`${email} 로그인 성공`)
         navigate('/login')
       }
     }
+
+   
 
     return (  
         <MainContainer>

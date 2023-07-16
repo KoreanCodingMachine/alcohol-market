@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import '../styles/Login.css'
 
+
 function Login() {
 
     const navigate = useNavigate()
@@ -39,7 +40,6 @@ function Login() {
         if (status === 200) {
           localStorage.setItem('token', data.token)
           localStorage.setItem('email', email)
-          alert(`${email} 로그인 성공`)
           navigate('/')
         }
         
