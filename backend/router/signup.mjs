@@ -1,9 +1,5 @@
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-
 import { getDBInstance } from '../db.js';
-
-const privateKey = 'SOOL_DAM_HWA'
 
 export default async function (ctx, next) {
   const db = getDBInstance();

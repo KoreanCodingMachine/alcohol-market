@@ -8,7 +8,6 @@ const privateKey = 'SOOL_DAM_HWA'
 export default async function (ctx, next) {
     const db = getDBInstance();
     const { username, password } = ctx.request.body;
-    console.log("username, password", username, password)
     const usersCollection = db.collection('users');
   
     const user = await usersCollection.findOne({ username });
