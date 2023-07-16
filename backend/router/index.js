@@ -1,14 +1,18 @@
 import Router from 'koa-router';
 import signIn from './signin.js';
 import signUp from './signup.mjs'
-import beerMain from './beer.js'
 
-// import productsRouter from './products';
+import {beerMainScroll, getAllBeer, getBeerInfo, getBeerTop5} from './beer.js'
 
 const router = new Router();
 
 router.post('/api/signin', signIn);
 router.post('/api/signup', signUp);
-router.get('/api/beer/main', beerMain);
+
+router.get('/api/beer/main', beerMainScroll);
+router.get('/api/beer/info/:beerId', getBeerInfo);
+router.get('/api/beer/all', getAllBeer);
+router.get('/api/beer/top', getBeerTop5);
+
 
 export default router;
