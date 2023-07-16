@@ -20,7 +20,7 @@ function Banner() {
 const StBannerContainer = styled.div` 
     background: #d9d9d9;
     width: 100%;
-    height: 20rem;
+    height: 25rem;
 
     .content-container {
         display: flex;

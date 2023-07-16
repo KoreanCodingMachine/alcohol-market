@@ -1,31 +1,68 @@
-import React, { useState ,useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState ,useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from 'styled-components'
+import { Avatar } from "@chakra-ui/react";
+import DropDown from "./DropDown";
 
 function Navbar() {
     
     const [email, setEmail] = useState(null)
     const location = useLocation()
+    const navigate = useNavigate()
+    const [dropDownOpen , setDropDownOpen] = useState(false)
 
+    const best = document.querySelector('.best_container')
+    const category = document.querySelector('.category_container')
+    const menu = document.querySelector('.menu_container')
+    
     useEffect(() => {    
-        console.log(location)
         const storedEmail = localStorage.getItem('email')
-        console.log('stored', storedEmail)
         if (storedEmail) {
             setEmail(storedEmail)
             console.log(email)
         }
     }, [email, location])
 
+    const onScrollIntoView = (val) => {
+       if (val === 'Best') {
+        return best.scrollIntoView({behavior: 'smooth', block: 'start'})
+       }
+
+       if (val === 'Category') {
+        return category.scrollIntoView({behavior: 'smooth', block: 'start'})
+       }
+
+       if (val === 'Menu') {
+        return menu.scrollIntoView({behavior: 'smooth', block: 'start'})
+       }
+    }
+
+    console.log(document.querySelector('.best_container'))
+
     return ( 
         <StyledNavbar>
             <li className="navbar_title">BeerU</li>
             <ul>
-                <li>Best</li>
-                <li>Category</li>
-                <li>Menu</li>
+                <li onClick={() => {onScrollIntoView('Best')}}>Best</li>
+                <li onClick={() => {onScrollIntoView('Category')}}>Category</li>
+                <li onClick={() => {onScrollIntoView('Menu')}}>Menu</li>
             </ul>
-                {email  !== null ?  <div className="user">welcome {email}</div>  : <div className="icon"></div>}
+                {
+                    email  !== null 
+                     ? <div className="dropdown_wrapper">
+                       <Avatar className="user" src='https://bit.ly/broken-link' onClick={() => {setDropDownOpen(prev => !prev)}}/>
+                       {
+                       dropDownOpen === true 
+                       ? 
+                       <select> 
+                         <option value={'profile'}>프로필</option>
+                         <option value={'logout'}>로그아웃</option>
+                       </select> 
+                       : null }
+                       </div>
+                     :
+                     <p className='user' onClick={() => {navigate('/login')}}>로그인</p>
+                }
         </StyledNavbar>
      );
 }
@@ -43,6 +80,9 @@ const StyledNavbar = styled.ul`
         list-style: none;
         display: flex;
         gap: 5rem;
+        li {
+            cursor: pointer;
+        }
     }
 
     .icon {
@@ -57,11 +97,24 @@ const StyledNavbar = styled.ul`
     .user {
         margin-left: auto;
         margin-right: 2rem;
+        cursor: pointer;
     }
 
     .navbar_title {
         font-weight: bold;
         font-size: 1.5rem;
+    }
+
+    .dropdown_wrapper {
+      transform: translateY(20%);
+      margin-left: auto;
+      margin-right: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;   
+       .user {
+        margin: 0 auto;
+       }
     }
 `
 

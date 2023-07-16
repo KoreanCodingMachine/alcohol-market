@@ -1,14 +1,30 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components'
+import axios from 'axios'
+import src from '../asset/beer.jpeg'
 
 function Best() {
+
+    // const getData = async () => {
+    //     const { data , status } = await axios.get(`http://localhost:3333/api/beer/top`)
+    //     console.log(data)
+    //     console.log(status)
+    // }
+
+
+    // useEffect(() => {
+    //    getData()
+    // }, [])
+
+
     return ( 
-            <BestContainer>
+            <BestContainer className='best_container'>
                 <h4>Best</h4>
                 <p>가장 인기있는 맥주를 만나보세요</p>
                 <StBoxContainer>
                     <StBox>
                         <div>1</div>
+                        <img src={src}></img>
                     </StBox>
                     <StSecondContainer>
                         <StBoxSecond>
@@ -68,7 +84,7 @@ const StBoxSecond = styled.div`
     width: calc(50% - 5px);
     height: 225px;
     background-color: #d9d9d9;
-
+    
     div {
         width: 52px;
         height: 52px;
@@ -76,6 +92,10 @@ const StBoxSecond = styled.div`
         text-align: center;
         line-height: 52px;
         font-weight: bold;
+    }
+
+    img {
+        object-fit: cover;
     }
 `
 

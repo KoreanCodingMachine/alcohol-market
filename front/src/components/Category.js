@@ -4,7 +4,7 @@ import CustomCarousel from './CustomCarousel';
 
 function Category() {
     return (  
-        <STCategoryContainer>
+        <STCategoryContainer className='category_container'>
             <STCategoryIconContainer>
                 <div>
                     <FaFacebookF/>

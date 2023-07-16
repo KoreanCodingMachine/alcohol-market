@@ -497,7 +497,7 @@ const BeerMenu = () => {
     }, [filteredName, brewType, filterData])
 
   return (
-    <STBeerMenuContainer>
+    <STBeerMenuContainer className='menu_container'>
         <h1>BeerMenu</h1>
         <div className='beer_menu'>
            {brew.map((v,i) => {
@@ -519,7 +519,9 @@ const BeerMenu = () => {
                     filteredName={filteredName}
                     />
                 <select onChange={onChangeCountry}>
+                < option value="" selected disabled hidden >선택해주세요</option>
                 {
+                    
                     uniqeCountry.map((v,i) => {
                         return <option value={v} key={v._id}>{v}</option>
                     })
