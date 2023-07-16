@@ -5,16 +5,16 @@ import src from '../asset/beer.jpeg'
 
 function Best() {
 
-    // const getData = async () => {
-    //     const { data , status } = await axios.get(`http://localhost:3333/api/beer/top`)
-    //     console.log(data)
-    //     console.log(status)
-    // }
+    const getData = async () => {
+        const { data , status } = await axios.get(`http://localhost:3333/api/beer/top`)
+        console.log(data)
+        console.log(status)
+    }
 
 
-    // useEffect(() => {
-    //    getData()
-    // }, [])
+    useEffect(() => {
+       getData()
+    }, [])
 
 
     return ( 
@@ -84,7 +84,7 @@ const StBoxSecond = styled.div`
     width: calc(50% - 5px);
     height: 225px;
     background-color: #d9d9d9;
-    
+
     div {
         width: 52px;
         height: 52px;
