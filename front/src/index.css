@@ -12,9 +12,10 @@ body {
   font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url('../src/asset/beer.jpeg');
+  /* background-image: url('../src/asset/beer.jpeg');
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
+  background: #f5f5f5;
    
 }
 

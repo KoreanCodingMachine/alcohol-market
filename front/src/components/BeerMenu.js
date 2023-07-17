@@ -4,10 +4,14 @@ import { Filter } from './Filter'
 import SearchBar from './SearchBar'
 import BeerCard from './BeerCard'
 import axios from 'axios'
+import { useParams, useNavigate } from 'react-router-dom'
 
 
 
 const BeerMenu = () => {
+
+   
+    const params = useParams()
 
     const [isLoading, setIsLoading] = useState(false)
     const [page, setPage] = useState(1)
@@ -22,6 +26,7 @@ const BeerMenu = () => {
     const [filterData, setFilterData] = useState([])
     const [doubleFilterData, setDoubleFilterData] = useState([]) // 2중 필터링한 데이터
     const [doubleClicked, setDoubleClicked] = useState(false)
+
 
     const countryFiltered = originData.map((v,i) => {
         return v.country.split(' ')[0]
@@ -63,6 +68,7 @@ const BeerMenu = () => {
         if (filteredName === null && brewType === null) {
             setData(prevData =>[...prevData, ...a.data.items])
             setOriginData(prevData => [...prevData, ...a.data.items])
+            console.log(data)
         } else {
             setData(prevData =>[...prevData, ...a.data.items])
             setOriginData(prevData => [...prevData, ...a.data.items])
@@ -201,7 +207,6 @@ const BeerMenu = () => {
         if (!isLoading && hasMore) {
             getData()
         }
-        
     }, [page, hasMore])
 
 
@@ -308,6 +313,7 @@ const BeerMenu = () => {
         if (filteredName !== null && brewType === null) {
             let scrollWithFilterData = [...originData]
             if (filteredName === '도수순') {
+                console.log(scrollWithFilterData)
                 console.log('scroll')
                 console.log(filtered)
                 console.log(filteredName)

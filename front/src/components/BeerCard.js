@@ -1,10 +1,30 @@
 import React from 'react'
 import styled from 'styled-components'
-import src from '../asset/beer.jpeg'
+import { useNavigate } from 'react-router-dom'
 
-const BeerCard = ({title,image,rating,country,alcohol,type}) => {
+
+const BeerCard = ({title,image,rating,country,alcohol,type,id}) => {
+
+    const navigate = useNavigate('/')
+    
+
+    const moveDetailPage = () => {
+        navigate(`/detail/${id}`, {
+            state : {
+                image : image,
+                title : title,
+                rating : rating,
+                country : country,
+                alcohol : alcohol,
+                type : type,
+                id : id
+            }
+        })
+    }
+
+
   return (
-    <STBeerCard>
+    <STBeerCard onClick = {() => {moveDetailPage(id)}}>
         <div className='img_wrapper'>
             <img className='img' src={image}>
             </img>

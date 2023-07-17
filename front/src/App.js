@@ -6,7 +6,8 @@ import Main from "./page/Main";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import styled from 'styled-components';
-
+import Profile from "./page/Profile";
+import Detail from './page/Detail'
 
 const theme = {
   backgrounds: {
@@ -24,6 +25,8 @@ function App() {
               <Route path="/"element={<Main />}/> 
               <Route path="/login"element={<Login />}/>
               <Route path="/signup" element={<Signup />}/>
+              <Route path='/profile' element={<Profile />}/>
+              <Route path='/detail/:id' element={<Detail />}/>
           </Routes>
           <STFooter />
       </>

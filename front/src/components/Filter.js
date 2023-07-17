@@ -1,11 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const Filter = ({content, onClick, filteredName, doubleClicked}) => {
-  
+export const Filter = ({content, onClick, filteredName}) => {
 
-  console.log(filteredName)
-  console.log('-----', doubleClicked)
   return (
         <STFilter 
         onClick={() => {onClick(content)}} 

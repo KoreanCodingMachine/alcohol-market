@@ -50,12 +50,15 @@ function Navbar() {
        }
     }
 
-    console.log(document.querySelector('.best_container'))
 
+    const onLogOut = () => {
+        localStorage.clear()
+        window.location.replace('/')
+    }
 
     const customMenuButton = forwardRef((props, ref) => {
         return (
-            <Avatar className="user" src='https://bit.ly/broken-link' ref={ref} {...props} style={{marginLeft: 'auto', marginRight:'2rem'}}>
+            <Avatar className="user" src='https://bit.ly/broken-link' ref={ref} {...props} style={{marginLeft: 'auto', marginRight:'2rem', cursor: 'pointer'}}>
                 {props.children}
             </Avatar>
         )
@@ -63,7 +66,7 @@ function Navbar() {
 
     return ( 
         <StyledNavbar>
-            <li className="navbar_title">BeerU</li>
+            <li className="navbar_title" style={{cursor: 'pointer'}} onClick={() => {navigate('/')}}>BeerU</li>
             <ul>
                 <li onClick={() => {onScrollIntoView('Best')}}>Best</li>
                 <li onClick={() => {onScrollIntoView('Category')}}>Category</li>
@@ -73,10 +76,10 @@ function Navbar() {
                     email  !== null 
                      ? 
                      <Menu>
-                        <MenuButton isActive={dropDownOpen} as={customMenuButton}></MenuButton>
+                        <MenuButton isActive={dropDownOpen} as={customMenuButton} style={{cursor: 'pointer'}}></MenuButton>
                         <MenuList>
-                            <MenuItem>프로필</MenuItem>
-                            <MenuItem>로그아웃</MenuItem>
+                            <MenuItem onClick={() => {navigate('/profile')}}>프로필</MenuItem>
+                            <MenuItem onClick={() => {onLogOut()}}>로그아웃</MenuItem>
                         </MenuList>
                     </Menu>
                      :
