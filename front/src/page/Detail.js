@@ -5,6 +5,8 @@ import BeerCard from '../components/BeerCard'
 import { ImStarFull } from "react-icons/im";
 import { Button, ButtonGroup } from '@chakra-ui/react'
 import axios from 'axios'
+import { Avatar, forwardRef } from "@chakra-ui/react";
+
 
 const Detail = () => {
 
@@ -12,16 +14,18 @@ const Detail = () => {
 
   const beerInfo = {...location.state}
 
-  const { alcohol, country, id, image, rating, title, type } = beerInfo
+  const token = localStorage.getItem('token')
+
+  const { id } = beerInfo
 
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const [scoreValue, setScoreValue] = useState(0)
   const [toggle, setToggle] = useState(true)
   const [content, setContent] = useState(null)
   const [t, setTrue] = useState(true)
+  const [review, setReview] = useState([])
   const array = [0,1,2,3,4]
 
-  console.log('scorevalue', scoreValue)
 
   const onHandleStarClick = (index) => {
    
@@ -44,7 +48,7 @@ const Detail = () => {
   }
 
   const onChangeReview = (e) => {
-      console.log(e.target.value)
+    setContent(e.target.value)
   }
 
   useEffect(() => {
@@ -69,9 +73,23 @@ const Detail = () => {
     }
 
     console.log('submit')
-    const { data, status } = await axios.post(`http://localhost:3333/api/beer/review}`, {content, rating:scoreValue })
+    const { data, status } = await axios.post(`http://localhost:3333/api/beer/review/${id}`, {content, rating:scoreValue,user:localStorage.getItem('token') })
     console.log(data, status)
   }
+
+  const getUserComment = async () => {
+    const { data, status } = await axios.get(`http://localhost:3333/api/beer/review/${id}`)
+    console.log(data, status)
+  }
+
+  const getBeerInfo = async () => {
+    const { data, status } = await axios.get(`http://localhost:3333/api/beer/review/${id}`)
+    console.log(data, status)
+  }
+
+  useEffect(() => {
+    getUserComment()
+  },[])
 
 
   return (
@@ -180,11 +198,28 @@ const Detail = () => {
             }
         </div>
         <div>
-          <textarea placeholder='로그인 후 이용해주세요' onChange={onChangeReview}>
+          <textarea placeholder={token !== '' ? '리뷰를 작성해주세요' : '로그인 후 이용해주세요'} onChange={onChangeReview}>
           </textarea>
         </div>
         <div className='button-wrapper'>
           <Button onClick={onSubmitPost} colorScheme='blue'>리뷰 전송하기</Button>
+        </div>
+        <div className='user_reviews'>
+            <div className='user_reviews-header'>
+              <div className='header_thumbnails'>
+                <Avatar/>
+              </div>
+              <div className='header_info'>
+                <p>{localStorage.getItem('email')}</p>
+
+              </div>
+            </div>
+            <div className='user_reviews-content'>
+
+            </div>
+            <div className='user_reviews-createdAt'>
+
+            </div>
         </div>
       </STReviewSection>
     </STDetailWrapper>
@@ -381,6 +416,16 @@ const STReviewSection = styled.section`
     justify-content: flex-end;
     margin-top: 1.5rem;
 }
+
+  .user_reviews {
+    border: 1px solid gray;
+    margin-top: 5rem;
+
+    .user_reviews-header {
+      border: 1px solid gray;
+      width: 100%;
+    }
+  }
 `
 
 export default Detail

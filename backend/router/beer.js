@@ -1,4 +1,5 @@
 import BeerModel from '../models/beer.js';
+import Review from '../models/review.js';
 
 export async function getBeerTop5(ctx) {
   try {
@@ -13,9 +14,12 @@ export async function getBeerTop5(ctx) {
 
 export async function getBeerInfo(ctx) {
   const { beerId } = ctx.params;
+
   try {
     const beer = await BeerModel.findOne({ beerId: beerId * 1 });
-    ctx.body = beer;
+    const review = await Review.find({ beerId: beerId*1 })
+    ctx.body = {beer, review};
+
   } catch (error) {
     console.error('Error retrieving items:', error);
     ctx.status = 500;
@@ -57,22 +61,3 @@ export async function beerMainScroll(ctx) {
   }
 }
 
-import Review from '../models/review.js';
-
-export async function postBeerReview (ctx, next) {
-    const { content, rating } = ctx.request.body;
-
-    const newReview = new Review({
-        content,
-        rating: rating*1,
-      });
-
-      try {
-        await newReview.save();
-        ctx.status = 201;
-        ctx.body = { message: 'Review saved successfully' };
-      } catch (err) {
-        ctx.status = 500;
-        ctx.body = { error: 'Failed to save the review' };
-      }
-}
