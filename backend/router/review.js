@@ -1,12 +1,13 @@
 import Review from '../models/review.js';
 
 export async function postBeerReview (ctx, next) {
-    const { content, rating, beerId } = ctx.request.body;
+    const { content, rating, beerId, user } = ctx.request.body;
 
     const newReview = new Review({
         content,
         rating: rating*1,
-        beerId: beerId*1
+        beerId: beerId*1,
+        user
       });
 
       try {
@@ -15,6 +16,7 @@ export async function postBeerReview (ctx, next) {
         ctx.body = { message: 'Review saved successfully' };
       } catch (err) {
         ctx.status = 500;
+        console.log(err)
         ctx.body = { error: 'Failed to save the review' };
       }
 }
