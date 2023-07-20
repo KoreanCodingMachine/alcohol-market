@@ -76,13 +76,9 @@ const Detail = () => {
     }
 
     console.log('submit')
-    const { data, status } = await axios.post(`http://localhost:3333/api/beer/review/${id}`, {content, rating:scoreValue,user:localStorage.getItem('token') })
+    const { data, status } = await axios.post(`http://localhost:3333/api/beer/review`, {content, rating:scoreValue,beerId:id ,user:localStorage.getItem('token') })
     console.log(data, status)
-  }
-
-  const getUserComment = async () => {
-    const { data, status } = await axios.get(`http://localhost:3333/api/beer/review/${id}`)
-    console.log(data, status)
+    setContent('')
   }
 
   const getBeerInfo = async () => {
@@ -90,13 +86,16 @@ const Detail = () => {
     console.log(data, status)
     if (status === 200) {
       setBeerData(data.beer)
+      setReview([...data.review])
     }
   }
 
   useEffect(() => {
-    // getUserComment()
     getBeerInfo()
-   
+  },[])
+
+  useEffect(() => {
+    setReview([...review, {content, rating:scoreValue} ])
   },[])
 
 
@@ -187,21 +186,27 @@ const Detail = () => {
           <Button onClick={onSubmitPost} colorScheme='blue'>리뷰 전송하기</Button>
         </div>
         <div className='user_reviews'>
-            <div className='user_reviews-header'>
-              <div className='header_thumbnails'>
-                <Avatar/>
+           {
+            review && review.map((v) => {
+             return <>
+                <div className='user_reviews-header'>
+                <div className='header_thumbnails'>
+                  <Avatar/>
+                </div>
+                <div className='header_info'>
+                  <p>stat...</p>
+                  <p>{localStorage.getItem('email')}</p>
+                </div>
               </div>
-              <div className='header_info'>
-                <p>{localStorage.getItem('email')}</p>
-
+              <div className='user_reviews-content'>
+                {v.content}
               </div>
-            </div>
-            <div className='user_reviews-content'>
-
-            </div>
-            <div className='user_reviews-createdAt'>
-
-            </div>
+              <div className='user_reviews-createdAt'>
+                {v.createdAt}
+              </div>
+            </>
+            })
+           }
         </div>
       </STReviewSection>
      </>}

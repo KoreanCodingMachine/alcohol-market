@@ -8,8 +8,6 @@ const BeerCard = ({title,image,rating,country,alcohol,type,id}) => {
     const navigate = useNavigate('/')
     
 
-    console.log(title,country)
-
     const moveDetailPage = () => {
         navigate(`/detail/${id}`, {
             state : {
@@ -21,21 +19,25 @@ const BeerCard = ({title,image,rating,country,alcohol,type,id}) => {
 
   return (
     <STBeerCard onClick = {() => {moveDetailPage(id)}}>
-        <div className='img_wrapper'>
-            <img className='img' src={image}>
-            </img>
-        </div>
-        <div className='beercard_content'>
-            <p className='rate'>평점</p>
-            <p>{rating}</p>
-            <p>{country.slice(0,8)}</p>
-        </div>
-        <h1 className='beercard_name'>
-            {title.slice(0,8)}
-        </h1>
-        <div className='beercard_info'>
-            {type} / {alcohol}%
-        </div>
+        {
+            title && <>
+                <div className='img_wrapper'>
+                <img className='img' src={image}>
+                </img>
+               </div>
+            <div className='beercard_content'>
+                <p className='rate'>평점</p>
+                <p>{rating}</p>
+                <p>{country.slice(0,8)}</p>
+            </div>
+            <h1 className='beercard_name'>
+                {title.slice(0,8)}
+            </h1>
+            <div className='beercard_info'>
+                {type} / {alcohol}%
+            </div>
+            </>
+        }
     </STBeerCard>
   )
 }
