@@ -3,7 +3,8 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import BeerCard from '../components/BeerCard'
 import { ImStarFull } from "react-icons/im";
-
+import { Button, ButtonGroup } from '@chakra-ui/react'
+import axios from 'axios'
 
 const Detail = () => {
 
@@ -16,7 +17,11 @@ const Detail = () => {
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const [scoreValue, setScoreValue] = useState(0)
   const [toggle, setToggle] = useState(true)
+  const [content, setContent] = useState(null)
+  const [t, setTrue] = useState(true)
   const array = [0,1,2,3,4]
+
+  console.log('scorevalue', scoreValue)
 
   const onHandleStarClick = (index) => {
    
@@ -27,17 +32,14 @@ const Detail = () => {
     }
 
     let score = clickedArr.filter((v) => v === true).length
-    console.log('scorevalue', scoreValue) // 0 4 4
-    console.log('score', score) //  4 4 4
-    console.log('toggle', toggle) // true true true
+   
     if (scoreValue === score && toggle) {
-      console.log('toggle', toggle) // true
       // setClicked([false,false,false,false,false])
       setToggle(prev => !prev) //  false
       return;
     }
     
-    setScoreValue(score)
+    setScoreValue(prev => score)
     setClicked(clickedArr);
   }
 
@@ -50,9 +52,27 @@ const Detail = () => {
     if (!toggle) {
       onHandleStarClick(-1) // 별 초기화 
       setToggle(prev => !prev) // true 
+      setTrue(true)
     }
     
   }, [toggle])
+
+
+  const onSubmitPost = async () => {
+
+    if (scoreValue <= 0) {
+      return
+    }
+
+    if (content === '') {
+      return
+    }
+
+    console.log('submit')
+    const { data, status } = await axios.post(`http://localhost:3333/api/beer/review}`, {content, rating:scoreValue })
+    console.log(data, status)
+  }
+
 
   return (
     <STDetailWrapper>
@@ -159,9 +179,13 @@ const Detail = () => {
               ))
             }
         </div>
-        <textarea placeholder='로그인 후 이용해주세요' onChange={onChangeReview}>
-
-        </textarea>
+        <div>
+          <textarea placeholder='로그인 후 이용해주세요' onChange={onChangeReview}>
+          </textarea>
+        </div>
+        <div className='button-wrapper'>
+          <Button onClick={onSubmitPost} colorScheme='blue'>리뷰 전송하기</Button>
+        </div>
       </STReviewSection>
     </STDetailWrapper>
   )
@@ -229,6 +253,7 @@ const STBeerInfoSection = styled.section`
     justify-content: space-between;
     align-items: center;
     position: relative;
+   
     .img {
       width: 160px;
       height: 160px;
@@ -291,6 +316,7 @@ const STRecommendSection = styled.section`
     display: flex;
     justify-content: space-between;
     margin-top: 50px;
+    gap: 20px;
   }
 
 
@@ -347,6 +373,14 @@ const STReviewSection = styled.section`
     border-radius: 5px;
     margin-top: 150px;
   }
+
+  .button-wrapper {
+    display: flex;
+    width: 820px;
+    margin: 0 auto;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
 `
 
 export default Detail
