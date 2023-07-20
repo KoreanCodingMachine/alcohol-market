@@ -18,10 +18,13 @@ const Detail = () => {
 
   const { id } = beerInfo
 
+  console.log(id)
+
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const [scoreValue, setScoreValue] = useState(0)
   const [toggle, setToggle] = useState(true)
   const [content, setContent] = useState(null)
+  const [beerData, setBeerData] = useState([])
   const [t, setTrue] = useState(true)
   const [review, setReview] = useState([])
   const array = [0,1,2,3,4]
@@ -83,33 +86,39 @@ const Detail = () => {
   }
 
   const getBeerInfo = async () => {
-    const { data, status } = await axios.get(`http://localhost:3333/api/beer/review/${id}`)
+    const { data, status } = await axios.get(`http://localhost:3333/api/beer/info/${id}`)
     console.log(data, status)
+    if (status === 200) {
+      setBeerData(data.beer)
+    }
   }
 
   useEffect(() => {
-    getUserComment()
+    // getUserComment()
+    getBeerInfo()
+   
   },[])
 
 
   return (
     <STDetailWrapper>
+     {beerData &&  <>
       <STBeerImageSection className='beer_image'>
         <STDetailBeerImageWrapper>
-          <img src={image}></img>
+          <img src={beerData.image}></img>
         </STDetailBeerImageWrapper>
       </STBeerImageSection>
       <STBeerInfoSection className='beer_info'>
         <div className='info_wrapper'>
-          <h1>{title}</h1>
-          <p>{type} / rating : {rating}</p>
+          <h1>{beerData.title}</h1>
+          <p>{beerData.type} / rating : {beerData.rating}</p>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
             Sed tempus neque non tristique vehicula.</p>
         </div>
         <div className='alcohol_img_wrapper'>
           <div className='alcohol_img'>
               <div className='img'></div>
-              <h3>alc {alcohol}%</h3>
+              <h3>alc {beerData.alcohol}%</h3>
           </div>
           <STVerticalLine />
           <div className='taste_wrapper'>
@@ -136,42 +145,15 @@ const Detail = () => {
           <h2>Recommend</h2>
           <p>당신을 위한 비슷한 맥주를 추천합니다</p>
         </div>
-        <div className='beercard'>
+        <div className='beercard'> 
         <BeerCard
-          title={title}
-          image={image}
-          rating={rating}
-          country={country}
-          alcohol={alcohol}
-          type={type}
-          id={id}
-        />
-         <BeerCard
-          title={title}
-          image={image}
-          rating={rating}
-          country={country}
-          alcohol={alcohol}
-          type={type}
-          id={id}
-        />
-         <BeerCard
-          title={title}
-          image={image}
-          rating={rating}
-          country={country}
-          alcohol={alcohol}
-          type={type}
-          id={id}
-        />
-         <BeerCard
-          title={title}
-          image={image}
-          rating={rating}
-          country={country}
-          alcohol={alcohol}
-          type={type}
-          id={id}
+          title={beerData.title}
+          image={beerData.image}
+          rating={beerData.rating}
+          country={beerData.country}
+          alcohol={beerData.alcohol}
+          type={beerData.type}
+          id={beerData.id}
         />
         </div>
       </STRecommendSection>
@@ -222,7 +204,9 @@ const Detail = () => {
             </div>
         </div>
       </STReviewSection>
+     </>}
     </STDetailWrapper>
+   
   )
 }
 

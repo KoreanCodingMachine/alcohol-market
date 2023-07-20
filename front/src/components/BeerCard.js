@@ -8,15 +8,11 @@ const BeerCard = ({title,image,rating,country,alcohol,type,id}) => {
     const navigate = useNavigate('/')
     
 
+    console.log(title,country)
+
     const moveDetailPage = () => {
         navigate(`/detail/${id}`, {
             state : {
-                image : image,
-                title : title,
-                rating : rating,
-                country : country,
-                alcohol : alcohol,
-                type : type,
                 id : id
             }
         })
