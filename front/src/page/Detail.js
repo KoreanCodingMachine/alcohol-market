@@ -18,8 +18,6 @@ const Detail = () => {
 
   const { id } = beerInfo
 
-  console.log(id)
-
   const [clicked, setClicked] = useState([false, false, false, false, false]);
   const [scoreValue, setScoreValue] = useState(0)
   const [toggle, setToggle] = useState(true)
@@ -28,7 +26,6 @@ const Detail = () => {
   const [t, setTrue] = useState(true)
   const [review, setReview] = useState([])
   const array = [0,1,2,3,4]
-
 
   const onHandleStarClick = (index) => {
    
@@ -78,7 +75,7 @@ const Detail = () => {
     console.log('submit')
     const { data, status } = await axios.post(`http://localhost:3333/api/beer/review`, {content, rating:scoreValue,beerId:id ,user:localStorage.getItem('token') })
     console.log(data, status)
-    setContent('')
+  
   }
 
   const getBeerInfo = async () => {
@@ -95,8 +92,8 @@ const Detail = () => {
   },[])
 
   useEffect(() => {
-    setReview([...review, {content, rating:scoreValue} ])
-  },[])
+    setReview((prevReview) => [...prevReview, { content, rating: scoreValue }]);
+  }, [review, scoreValue]);
 
 
   return (
