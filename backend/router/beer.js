@@ -1,11 +1,8 @@
 import BeerModel from '../models/beer.js';
 
-
 export async function getBeerTop5(ctx) {
   try {
     const beers = await BeerModel.find().sort({ rating: -1 }).limit(5);
-
-    console.log("beers", await BeerModel.find())
     ctx.body = beers;
   } catch (error) {
     console.error('Error retrieving items:', error);
@@ -58,4 +55,24 @@ export async function beerMainScroll(ctx) {
     ctx.status = 500;
     ctx.body = 'An error occurred while retrieving items.';
   }
+}
+
+import Review from '../models/review.js';
+
+export async function postBeerReview (ctx, next) {
+    const { content, rating } = ctx.request.body;
+
+    const newReview = new Review({
+        content,
+        rating: rating*1,
+      });
+
+      try {
+        await newReview.save();
+        ctx.status = 201;
+        ctx.body = { message: 'Review saved successfully' };
+      } catch (err) {
+        ctx.status = 500;
+        ctx.body = { error: 'Failed to save the review' };
+      }
 }
